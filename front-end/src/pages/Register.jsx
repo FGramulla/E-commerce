@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import '../styles/register.css';
+import '../styles/Register.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
