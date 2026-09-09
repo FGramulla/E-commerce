@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { FiUser, FiTrash2, FiSave, FiEdit2, FiCamera, FiX } from 'react-icons/fi';
@@ -32,7 +32,7 @@ const Perfil = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:4000/api/users/perfil', {
+        const response = await axiosClient.get('/api/users/perfil', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -117,8 +117,8 @@ const Perfil = () => {
         payload.currentPassword = formData.currentPassword;
       }
 
-      const response = await axios.put(
-        'http://localhost:4000/api/users/perfil',
+      const response = await axiosClient.put(
+        '/api/users/perfil',
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -147,7 +147,7 @@ const Perfil = () => {
   const handleDeleteAccount = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete('http://localhost:4000/api/users/perfil', {
+      await axiosClient.delete('/api/users/perfil', {
         headers: { Authorization: `Bearer ${token}` },
       });
       logout();

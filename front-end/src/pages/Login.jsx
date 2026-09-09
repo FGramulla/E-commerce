@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react'; // <-- 1. Importar useContext
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { AuthContext } from '../context/AuthContext'; // <-- 2. Importar el AuthContext
+import axiosClient from '../api/axiosClient'; // <-- Usamos el cliente centralizado
+import { AuthContext } from '../context/AuthContext';
 import '../styles/Login.css';
 
 const Login = () => {
@@ -10,25 +10,26 @@ const Login = () => {
   const [error, setError] = useState('');
   
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // <-- 3. Obtener la función login del contexto
+  const { login } = useContext(AuthContext);
   
-const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await axios.post('http://localhost:4000/api/auth/login', {
-      email,
-      password,
-    });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      // Reemplazamos axios.post por axiosClient.post y usamos ruta relativa
+      const response = await axiosClient.post('/api/auth/login', {
+        email,
+        password,
+      });
 
-    const { token, usuario } = response.data;
+      const { token, usuario } = response.data;
 
-    login(usuario, token); // orden correcto: (userData, token)
+      login(usuario, token);
 
-    navigate('/home', { replace: true });
-  } catch (err) {
-    setError(err.response?.data?.error || 'Error al iniciar sesión');
-  }
-};
+      navigate('/home', { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.error || 'Error al iniciar sesión');
+    }
+  };
 
   return (
     <div className="login-container">

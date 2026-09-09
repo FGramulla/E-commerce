@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Card from '../components/Card';
+import axiosClient from '../api/axiosClient';
 import '../styles/Home.css';
 
 const Home = () => {
@@ -48,17 +49,16 @@ const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Cargar datos del backend
-  useEffect(() => {
+useEffect(() => {
     const fetchData = async () => {
       try {
         const [resProd, resCat] = await Promise.all([
-          axios.get('http://localhost:4000/api/products'),
-          axios.get('http://localhost:4000/api/categorias')
+          axiosClient.get('/api/products'),
+          axiosClient.get('/api/categorias')
         ]);
         setProductos(resProd.data);
         setCategorias(resCat.data);
 
-        // Opcional: calcular el precio máximo real de los productos para ajustar el slider automáticamente
         if (resProd.data.length > 0) {
           const precios = resProd.data.map(p => Number(p.precio));
           const highest = Math.max(...precios);

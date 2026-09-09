@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import '../styles/Register.css';
 
@@ -25,7 +25,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/countries')
+    axiosClient.get('/api/countries')
       .then((res) => setPaises(res.data))
       .catch((err) => console.error('Error al cargar países', err));
   }, []);
@@ -48,7 +48,7 @@ const Register = () => {
       // Excluimos confirmPassword para que el backend no reciba un campo extra que no necesita
       const { confirmPassword, ...dataToSend } = formData;
       
-      await axios.post('http://localhost:4000/api/auth/register', dataToSend);
+      await axiosClient.post('/api/auth/register', dataToSend);
       navigate('/login');
     } catch (err) {
       setError(err.response?.data?.error || 'Error al registrarse');

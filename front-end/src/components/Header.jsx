@@ -91,7 +91,6 @@ export const Header = () => {
         {isOpen && (
           <div className="header-dropdown-menu">
             {/* Toggle Dark Mode - arriba de todo */}
-            {/* Toggle Dark Mode - arriba de todo */}
             <div className="header-theme-toggle-wrapper">
               <span className="header-theme-label">
                 {isDark ? "Modo oscuro" : "Modo claro"}

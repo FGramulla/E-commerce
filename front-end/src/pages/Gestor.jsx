@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axiosClient from "../api/axiosClient";
 import { FiChevronDown, FiPlus, FiEdit2, FiTrash2, FiX } from "react-icons/fi";
 import "../styles/Gestor.css";
 
@@ -61,8 +61,8 @@ const Gestor = () => {
   const cargarDatos = async () => {
     try {
       const [resProductos, resCategorias] = await Promise.all([
-        axios.get("http://localhost:4000/api/products"),
-        axios.get("http://localhost:4000/api/categorias"),
+        axiosClient.get("/api/products"),
+        axiosClient.get("/api/categorias"),
       ]);
       setProductos(resProductos.data);
       setCategorias(resCategorias.data);
@@ -95,7 +95,7 @@ const Gestor = () => {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      await axios.post("http://localhost:4000/api/products", formData, config);
+      await axiosClient.post("/api/products", formData, config);
 
       setSuccess("¡Producto creado con éxito!");
       // En el reset del formulario dentro de handleSubmit, después del POST exitoso:
@@ -120,7 +120,7 @@ const Gestor = () => {
     try {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(`http://localhost:4000/api/products/${id}`, config);
+      await axiosClient.delete(`/api/products/${id}`, config);
       setSuccess("Producto eliminado correctamente.");
       cargarDatos();
     } catch (err) {
@@ -141,15 +141,15 @@ const Gestor = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       if (categoriaEditandoId) {
-        await axios.put(
-          `http://localhost:4000/api/categorias/${categoriaEditandoId}`,
+        await axiosClient.put(
+          `/api/categorias/${categoriaEditandoId}`,
           categoriaForm,
           config,
         );
         setSuccess("Categoría actualizada con éxito.");
       } else {
-        await axios.post(
-          "http://localhost:4000/api/categorias",
+        await axiosClient.post(
+          "/api/categorias",
           categoriaForm,
           config,
         );
@@ -185,7 +185,7 @@ const Gestor = () => {
     try {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(`http://localhost:4000/api/categorias/${id}`, config);
+      await axiosClient.delete(`/api/categorias/${id}`, config);
       setSuccess("Categoría eliminada correctamente.");
       if (categoriaEditandoId === id) handleCancelarEdicionCategoria();
       cargarDatos();

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../styles/ProductoDetalle.css'; // Crearemos este archivo de estilos a continuación
+import axiosClient from '../api/axiosClient';
+import '../styles/ProductoDetalle.css';
 
 const ProductoDetalle = () => {
   const { id } = useParams();
@@ -16,19 +16,12 @@ const ProductoDetalle = () => {
     const obtenerDetalleProducto = async () => {
       try {
         setLoading(true);
-        // Hacemos la petición para obtener todos los productos y filtramos por el ID actual, 
-        // o puedes crear una ruta en el backend como /api/products/:id si prefieres optimizarlo.
-        const response = await axios.get('http://localhost:4000/api/products');
-        const encontrado = response.data.find((p) => p.id === parseInt(id));
-
-        if (!encontrado) {
-          setError('El producto no existe o fue eliminado.');
-        } else {
-          setProducto(encontrado);
-        }
+        // Petición directa optimizada al endpoint por ID
+        const response = await axiosClient.get(`/api/products/${id}`);
+        setProducto(response.data);
       } catch (err) {
         console.error(err);
-        setError('Error al cargar los detalles del producto.');
+        setError('El producto no existe, fue eliminado o hubo un error al cargarlo.');
       } finally {
         setLoading(false);
       }
@@ -46,7 +39,6 @@ const ProductoDetalle = () => {
   };
 
   const agregarAlCarrito = () => {
-    // Lógica estándar para carrito guardado en localStorage
     const carritoActual = JSON.parse(localStorage.getItem('carrito')) || [];
     
     const index = carritoActual.findIndex(item => item.id === producto.id);
